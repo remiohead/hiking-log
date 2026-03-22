@@ -1,0 +1,28 @@
+.claude/settings.local.json
+
+# IDE
+.idea/
+*.iml
+
+# Swift build artifacts
+.build/
+.swiftpm/
+*.xcuserdata/
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+
+# Health export zip files (large, user data)
+*.zip
+
+# Live data symlinks (user data, not for version control)
+data/*.json
+
+# MCP server
+mcp-server/node_modules/
+*.mcpb
+
+# MCP config (contains absolute paths)
+.mcp.json

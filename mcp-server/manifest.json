@@ -1,0 +1,49 @@
+{
+  "manifest_version": "0.2",
+  "name": "hiking-data",
+  "display_name": "Hiking Data",
+  "version": "1.0.0",
+  "description": "Access hiking log data — trail history, stats, recommendations, and location data from 8+ years of hiking in Washington state.",
+  "author": {
+    "name": "Hiking Log"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server.mjs"],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "get_hike_stats",
+      "description": "Get overall hiking statistics, optionally filtered by year or region"
+    },
+    {
+      "name": "get_trail_history",
+      "description": "Get all hikes for a specific trail, with stats and trail info"
+    },
+    {
+      "name": "search_trails",
+      "description": "Search trails by name, region, loved-by, wishlist, distance, difficulty, dog-friendly"
+    },
+    {
+      "name": "find_trails_near",
+      "description": "Find trails near a coordinate or another trail within a radius"
+    },
+    {
+      "name": "get_hiking_patterns",
+      "description": "Analyze hiking patterns — frequency, seasonal trends, day-of-week, progression"
+    },
+    {
+      "name": "get_recommendations",
+      "description": "Get personalized trail recommendations based on preferences and history"
+    },
+    {
+      "name": "get_all_regions",
+      "description": "List all regions with trail and hike counts"
+    }
+  ]
+}
