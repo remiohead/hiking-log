@@ -1,0 +1,346 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		63F018238364469CB28CFFFE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9A97BA7C1E49E29631AABF; };
+		6AB4351E002D4E9FAC51D001 /* HikingLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440BE669F7D946B2BAD65E5F; };
+		982936D60E5D44B8B5768E9D /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 931FAB67D9E34C918D27AF3A; };
+		3069FC3BEB2745BCAECAF5B6 /* hike_history.json in Resources */ = {isa = PBXBuildFile; fileRef = 38847578C0A44821B43C07F2; };
+		5D32991BA96448AD8BF547A6 /* trail_database.json in Resources */ = {isa = PBXBuildFile; fileRef = EC60ADAD50124331918F02A3; };
+		C9F3D91EB7714CBCB8BD4F5F /* ClaudeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF135458E6E14DDBB50476EA; };
+		C08D5679E8C74EB9AAF5E5F2 /* HealthAutoExportImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9330DC56545340568E281FE5; };
+		A3E2145ABB1D475AB0545655 /* Hike.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA6918EB2AF41A082F2297D; };
+		FF04AC21664F40BD8A3D567A /* HikeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2B94173DB7477A8F4FD438; };
+		ED71EE269B6B4F16BDE14967 /* PersonaConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A9D01A07504D0F88B453E7; };
+		8D43D0FEE71B493FA3338CD4 /* PlatformHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1CA05AFFA7497FA9361937; };
+		ED4C7DA38431442E8BF42BD0 /* Trail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF69324F606446329C5ECFF1; };
+		69183435E59E459E94B8337E /* TrailStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADFCCC260AC48F3B374F862; };
+		0B66DFA8F1B54A31A6E2B0F9 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B584E9B697344A0D8C0DE62A; };
+		49C78FF42F574A2B8977E169 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82193221DFAC496E94B0D592; };
+		DD94CD1DFDB940B3B34FE435 /* HikeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73A3879D6E64BB68BEA630B; };
+		482F5EF733084DEE8EBF6ED4 /* HikeLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C9AC1526144DE4B411F813; };
+		E14D24E7F8A5450C8DA30991 /* HikeMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FB4B7B570A4CEF99673362; };
+		BBA86E229A8047CC98ECDCE4 /* HikePhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF49E8F5DBD410EBD74E40A; };
+		FD9DCB7198BD46F7A21E832B /* RecommendationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03A91E251014F9B895552A9; };
+		E5BD4EC46A9345678F92FBB6 /* TrailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26D47BE64445D88A3372B8; };
+		6A4BAFCD38664B848CB5DAA1 /* YearInReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8ED07A19DA24CD19EB35215; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E1000001 /* Hiking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hiking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B9A97BA7C1E49E29631AABF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = "HikingLog/HikingLog/ContentView.swift"; sourceTree = SOURCE_ROOT; };
+		440BE669F7D946B2BAD65E5F /* HikingLogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HikingLogApp.swift; path = "HikingLog/HikingLog/HikingLogApp.swift"; sourceTree = SOURCE_ROOT; };
+		931FAB67D9E34C918D27AF3A /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AppIcon.icns; path = "HikingLog/HikingLog/Resources/AppIcon.icns"; sourceTree = SOURCE_ROOT; };
+		38847578C0A44821B43C07F2 /* hike_history.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = hike_history.json; path = "HikingLog/HikingLog/Resources/hike_history.json"; sourceTree = SOURCE_ROOT; };
+		EC60ADAD50124331918F02A3 /* trail_database.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = trail_database.json; path = "HikingLog/HikingLog/Resources/trail_database.json"; sourceTree = SOURCE_ROOT; };
+		CF135458E6E14DDBB50476EA /* ClaudeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ClaudeService.swift; path = "HikingLog/HikingLog/Models/ClaudeService.swift"; sourceTree = SOURCE_ROOT; };
+		9330DC56545340568E281FE5 /* HealthAutoExportImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HealthAutoExportImporter.swift; path = "HikingLog/HikingLog/Models/HealthAutoExportImporter.swift"; sourceTree = SOURCE_ROOT; };
+		ADA6918EB2AF41A082F2297D /* Hike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Hike.swift; path = "HikingLog/HikingLog/Models/Hike.swift"; sourceTree = SOURCE_ROOT; };
+		0D2B94173DB7477A8F4FD438 /* HikeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HikeStore.swift; path = "HikingLog/HikingLog/Models/HikeStore.swift"; sourceTree = SOURCE_ROOT; };
+		70A9D01A07504D0F88B453E7 /* PersonaConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersonaConfig.swift; path = "HikingLog/HikingLog/Models/PersonaConfig.swift"; sourceTree = SOURCE_ROOT; };
+		7E1CA05AFFA7497FA9361937 /* PlatformHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlatformHelpers.swift; path = "HikingLog/HikingLog/Models/PlatformHelpers.swift"; sourceTree = SOURCE_ROOT; };
+		BF69324F606446329C5ECFF1 /* Trail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Trail.swift; path = "HikingLog/HikingLog/Models/Trail.swift"; sourceTree = SOURCE_ROOT; };
+		FADFCCC260AC48F3B374F862 /* TrailStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TrailStore.swift; path = "HikingLog/HikingLog/Models/TrailStore.swift"; sourceTree = SOURCE_ROOT; };
+		B584E9B697344A0D8C0DE62A /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WeatherService.swift; path = "HikingLog/HikingLog/Models/WeatherService.swift"; sourceTree = SOURCE_ROOT; };
+		82193221DFAC496E94B0D592 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DashboardView.swift; path = "HikingLog/HikingLog/Views/DashboardView.swift"; sourceTree = SOURCE_ROOT; };
+		D73A3879D6E64BB68BEA630B /* HikeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HikeDetailView.swift; path = "HikingLog/HikingLog/Views/HikeDetailView.swift"; sourceTree = SOURCE_ROOT; };
+		53C9AC1526144DE4B411F813 /* HikeLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HikeLogView.swift; path = "HikingLog/HikingLog/Views/HikeLogView.swift"; sourceTree = SOURCE_ROOT; };
+		D7FB4B7B570A4CEF99673362 /* HikeMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HikeMapView.swift; path = "HikingLog/HikingLog/Views/HikeMapView.swift"; sourceTree = SOURCE_ROOT; };
+		0EF49E8F5DBD410EBD74E40A /* HikePhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HikePhotosView.swift; path = "HikingLog/HikingLog/Views/HikePhotosView.swift"; sourceTree = SOURCE_ROOT; };
+		C03A91E251014F9B895552A9 /* RecommendationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RecommendationsView.swift; path = "HikingLog/HikingLog/Views/RecommendationsView.swift"; sourceTree = SOURCE_ROOT; };
+		AE26D47BE64445D88A3372B8 /* TrailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TrailsView.swift; path = "HikingLog/HikingLog/Views/TrailsView.swift"; sourceTree = SOURCE_ROOT; };
+		E8ED07A19DA24CD19EB35215 /* YearInReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = YearInReviewView.swift; path = "HikingLog/HikingLog/Views/YearInReviewView.swift"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D1000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C1000001 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				C1000002 /* Sources */,
+				C1000006 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C1000002 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				440BE669F7D946B2BAD65E5F /* HikingLogApp.swift */,
+				1B9A97BA7C1E49E29631AABF /* ContentView.swift */,
+				C1000003 /* Models */,
+				C1000004 /* Views */,
+				C1000005 /* Resources */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		C1000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ADA6918EB2AF41A082F2297D /* Hike.swift */,
+				0D2B94173DB7477A8F4FD438 /* HikeStore.swift */,
+				BF69324F606446329C5ECFF1 /* Trail.swift */,
+				FADFCCC260AC48F3B374F862 /* TrailStore.swift */,
+				9330DC56545340568E281FE5 /* HealthAutoExportImporter.swift */,
+				CF135458E6E14DDBB50476EA /* ClaudeService.swift */,
+				B584E9B697344A0D8C0DE62A /* WeatherService.swift */,
+				70A9D01A07504D0F88B453E7 /* PersonaConfig.swift */,
+				7E1CA05AFFA7497FA9361937 /* PlatformHelpers.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		C1000004 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				82193221DFAC496E94B0D592 /* DashboardView.swift */,
+				D7FB4B7B570A4CEF99673362 /* HikeMapView.swift */,
+				53C9AC1526144DE4B411F813 /* HikeLogView.swift */,
+				D73A3879D6E64BB68BEA630B /* HikeDetailView.swift */,
+				0EF49E8F5DBD410EBD74E40A /* HikePhotosView.swift */,
+				AE26D47BE64445D88A3372B8 /* TrailsView.swift */,
+				E8ED07A19DA24CD19EB35215 /* YearInReviewView.swift */,
+				C03A91E251014F9B895552A9 /* RecommendationsView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		C1000005 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				38847578C0A44821B43C07F2 /* hike_history.json */,
+				EC60ADAD50124331918F02A3 /* trail_database.json */,
+				931FAB67D9E34C918D27AF3A /* AppIcon.icns */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		C1000006 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E1000001 /* Hiking.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1000002 /* Hiking */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = H1000002;
+			buildPhases = (
+				D1000001 /* Sources */,
+				D1000002 /* Resources */,
+				D1000003 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Hiking;
+			productName = Hiking;
+			productReference = E1000001 /* Hiking.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+			};
+			buildConfigurationList = H1000001;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C1000001;
+			productRefGroup = C1000006 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1000002 /* Hiking */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D1000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				982936D60E5D44B8B5768E9D /* AppIcon.icns in Resources */,
+				3069FC3BEB2745BCAECAF5B6 /* hike_history.json in Resources */,
+				5D32991BA96448AD8BF547A6 /* trail_database.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D1000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63F018238364469CB28CFFFE /* ContentView.swift in Sources */,
+				6AB4351E002D4E9FAC51D001 /* HikingLogApp.swift in Sources */,
+				C9F3D91EB7714CBCB8BD4F5F /* ClaudeService.swift in Sources */,
+				C08D5679E8C74EB9AAF5E5F2 /* HealthAutoExportImporter.swift in Sources */,
+				A3E2145ABB1D475AB0545655 /* Hike.swift in Sources */,
+				FF04AC21664F40BD8A3D567A /* HikeStore.swift in Sources */,
+				ED71EE269B6B4F16BDE14967 /* PersonaConfig.swift in Sources */,
+				8D43D0FEE71B493FA3338CD4 /* PlatformHelpers.swift in Sources */,
+				ED4C7DA38431442E8BF42BD0 /* Trail.swift in Sources */,
+				69183435E59E459E94B8337E /* TrailStore.swift in Sources */,
+				0B66DFA8F1B54A31A6E2B0F9 /* WeatherService.swift in Sources */,
+				49C78FF42F574A2B8977E169 /* DashboardView.swift in Sources */,
+				DD94CD1DFDB940B3B34FE435 /* HikeDetailView.swift in Sources */,
+				482F5EF733084DEE8EBF6ED4 /* HikeLogView.swift in Sources */,
+				E14D24E7F8A5450C8DA30991 /* HikeMapView.swift in Sources */,
+				BBA86E229A8047CC98ECDCE4 /* HikePhotosView.swift in Sources */,
+				FD9DCB7198BD46F7A21E832B /* RecommendationsView.swift in Sources */,
+				E5BD4EC46A9345678F92FBB6 /* TrailsView.swift in Sources */,
+				6A4BAFCD38664B848CB5DAA1 /* YearInReviewView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		G1000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		G1000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		G1000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Hiking;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Hiking uses your Photos library to show pictures taken on your hike days.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hiking.ios;
+				PRODUCT_NAME = Hiking;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		G1000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Hiking;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Hiking uses your Photos library to show pictures taken on your hike days.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hiking.ios;
+				PRODUCT_NAME = Hiking;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		H1000001 /* Build configuration list for PBXProject "HikingIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G1000001 /* Debug */,
+				G1000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		H1000002 /* Build configuration list for PBXNativeTarget "Hiking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G1000003 /* Debug */,
+				G1000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = F1000001 /* Project object */;
+}

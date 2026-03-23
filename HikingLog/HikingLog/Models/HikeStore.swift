@@ -59,7 +59,7 @@ final class HikeStore {
         if FileManager.default.fileExists(atPath: fileURL.path) {
             loadFromURL(fileURL)
         } else {
-            if let bundleURL = Bundle.module.url(forResource: "hike_history", withExtension: "json") {
+            if let bundleURL = resourceBundle.url(forResource: "hike_history", withExtension: "json") {
                 loadFromURL(bundleURL)
                 save()
             }

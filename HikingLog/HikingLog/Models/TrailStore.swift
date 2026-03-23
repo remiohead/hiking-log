@@ -35,7 +35,7 @@ final class TrailStore {
     }
 
     private func seedFromBundle() {
-        guard let url = Bundle.module.url(forResource: "trail_database", withExtension: "json") else { return }
+        guard let url = resourceBundle.url(forResource: "trail_database", withExtension: "json") else { return }
         do {
             let data = try Data(contentsOf: url)
             let legacy = try JSONDecoder().decode([LegacyTrail].self, from: data)
