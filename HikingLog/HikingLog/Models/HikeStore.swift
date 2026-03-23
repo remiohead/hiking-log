@@ -96,6 +96,7 @@ final class HikeStore {
         return newHikes.filter { !existingIDs.contains($0.id) }.sorted { $0.date > $1.date }
     }
 
+    #if os(macOS)
     func previewFromHealthExportZip(_ url: URL, trailStore: TrailStore) throws -> (hikes: [Hike], skipped: Int, errors: [String]) {
         let existingIDs = Set(hikes.map(\.id))
         let result = try HealthAutoExportImporter.importFromZip(
@@ -105,6 +106,7 @@ final class HikeStore {
         )
         return (result.hikes.sorted { $0.date > $1.date }, result.skipped, result.errors)
     }
+    #endif
 
     func importSelected(_ newHikes: [Hike]) {
         hikes.append(contentsOf: newHikes)

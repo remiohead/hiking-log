@@ -174,7 +174,7 @@ struct RecommendationsView: View {
         let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? subject
         let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? body
         if let url = URL(string: "mailto:\(to)?subject=\(encodedSubject)&body=\(encodedBody)") {
-            NSWorkspace.shared.open(url)
+            openURL(url)
         }
     }
 
@@ -242,7 +242,7 @@ struct RecommendationCard: View {
 
                 if let url = rec.url, let link = URL(string: url) {
                     Button {
-                        NSWorkspace.shared.open(link)
+                        openURL(link)
                     } label: {
                         Label("View Trail", systemImage: "safari")
                     }

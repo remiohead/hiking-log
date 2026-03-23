@@ -200,6 +200,7 @@ struct DashboardView: View {
                 // Top Trails
                 GroupBox("Top 15 Most-Hiked Trails") {
                     let trails = Array(store.trailSummaries().prefix(15))
+                    #if os(macOS)
                     Table(trails, selection: $selectedTrailSummaryID) {
                         TableColumn("Trail") { t in
                             Text(t.name).fontWeight(.medium)
@@ -253,6 +254,35 @@ struct DashboardView: View {
                         }
                     }
                     .frame(height: CGFloat(trails.count) * 28 + 32)
+                    #else
+                    List(trails) { t in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(t.name).fontWeight(.medium)
+                                HStack(spacing: 6) {
+                                    Circle()
+                                        .fill(HikeStore.color(for: t.region))
+                                        .frame(width: 8, height: 8)
+                                    Text(t.region)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer()
+                            Text("\(t.count)x")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.green)
+                            Text(String(format: "%.1f mi", t.avgMiles))
+                                .font(.callout)
+                                .monospacedDigit()
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            trailSummaryToView = t
+                        }
+                    }
+                    .frame(height: CGFloat(trails.count) * 44 + 20)
+                    #endif
                 }
             }
             .padding()

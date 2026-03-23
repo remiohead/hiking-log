@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import CoreLocation
 
@@ -286,3 +287,4 @@ struct HealthAutoExportImporter {
         }
     }
 }
+#endif

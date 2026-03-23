@@ -37,10 +37,16 @@ enum NavItem: String, CaseIterable, Identifiable {
 struct ContentView: View {
     @Environment(HikeStore.self) private var store
     @Environment(TrailStore.self) private var trailStore
+
+    #if os(macOS)
     @State private var selection: NavItem = .dashboard
     @State private var dropTargeted = false
+    #else
+    @State private var selectedTab = 0
+    #endif
 
     var body: some View {
+        #if os(macOS)
         NavigationSplitView {
             List(NavItem.allCases, selection: $selection) { item in
                 Label {
@@ -71,10 +77,8 @@ struct ContentView: View {
                     .background(.green.opacity(0.05))
                     .overlay {
                         VStack(spacing: 8) {
-                            Image(systemName: "arrow.down.doc.fill")
-                                .font(.largeTitle)
-                            Text("Drop to import")
-                                .font(.headline)
+                            Image(systemName: "arrow.down.doc.fill").font(.largeTitle)
+                            Text("Drop to import").font(.headline)
                         }
                         .foregroundStyle(.green)
                     }
@@ -84,8 +88,28 @@ struct ContentView: View {
         .onDrop(of: [.fileURL], isTargeted: $dropTargeted) { providers in
             handleDrop(providers)
         }
+        #else
+        TabView(selection: $selectedTab) {
+            DashboardView()
+                .tabItem { Label("Dashboard", systemImage: "chart.bar.fill") }
+                .tag(0)
+            HikeMapView()
+                .tabItem { Label("Map", systemImage: "map.fill") }
+                .tag(1)
+            HikeLogView()
+                .tabItem { Label("Log", systemImage: "list.bullet") }
+                .tag(2)
+            TrailsView()
+                .tabItem { Label("Trails", systemImage: "mountain.2.fill") }
+                .tag(3)
+            RecommendationsView()
+                .tabItem { Label("For You", systemImage: "sparkles") }
+                .tag(4)
+        }
+        #endif
     }
 
+    #if os(macOS)
     private func handleDrop(_ providers: [NSItemProvider]) -> Bool {
         for provider in providers {
             provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { data, _ in
@@ -97,38 +121,21 @@ struct ContentView: View {
                         do {
                             let result = try store.previewFromHealthExportZip(url, trailStore: trailStore)
                             if !result.hikes.isEmpty {
-                                NotificationCenter.default.post(
-                                    name: .showImportPreview,
-                                    object: ImportPreview(hikes: result.hikes, skipped: result.skipped, errors: result.errors, source: "Health Auto Export")
-                                )
-                            } else {
-                                store.importStatus = "No new hikes found (\(result.skipped) duplicates skipped)"
-                            }
-                        } catch {
-                            store.importStatus = "Import failed: \(error.localizedDescription)"
-                        }
+                                NotificationCenter.default.post(name: .showImportPreview, object: ImportPreview(hikes: result.hikes, skipped: result.skipped, errors: result.errors, source: "Health Auto Export"))
+                            } else { store.importStatus = "No new hikes found (\(result.skipped) duplicates skipped)" }
+                        } catch { store.importStatus = "Import failed: \(error.localizedDescription)" }
                     } else if ext == "json" {
                         do {
                             let hikes = try store.previewFromJSON(url)
                             if !hikes.isEmpty {
-                                NotificationCenter.default.post(
-                                    name: .showImportPreview,
-                                    object: ImportPreview(hikes: hikes, skipped: 0, errors: [], source: "JSON")
-                                )
-                            } else {
-                                store.importStatus = "No new hikes found"
-                            }
-                        } catch {
-                            store.importStatus = "Import failed: \(error.localizedDescription)"
-                        }
+                                NotificationCenter.default.post(name: .showImportPreview, object: ImportPreview(hikes: hikes, skipped: 0, errors: [], source: "JSON"))
+                            } else { store.importStatus = "No new hikes found" }
+                        } catch { store.importStatus = "Import failed: \(error.localizedDescription)" }
                     }
                 }
             }
         }
         return true
     }
-}
-
-extension Notification.Name {
-    static let showImportPreview = Notification.Name("showImportPreview")
+    #endif
 }
