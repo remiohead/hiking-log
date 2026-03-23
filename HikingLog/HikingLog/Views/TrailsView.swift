@@ -96,6 +96,7 @@ struct TrailsView: View {
             Divider()
 
             // Trail list
+            #if os(macOS)
             Table(filtered, selection: $selectedTrailID) {
                 TableColumn("Trail") { trail in
                     VStack(alignment: .leading, spacing: 2) {
@@ -182,7 +183,7 @@ struct TrailsView: View {
                     HStack(spacing: 8) {
                         if let urlStr = trail.url, let url = URL(string: urlStr) {
                             Button {
-                                NSWorkspace.shared.open(url)
+                                openURL(url)
                             } label: {
                                 Image(systemName: "safari")
                                     .font(.caption)
@@ -222,7 +223,7 @@ struct TrailsView: View {
                     }
                     if let urlStr = trail.url, let url = URL(string: urlStr) {
                         Button("Open in Browser") {
-                            NSWorkspace.shared.open(url)
+                            openURL(url)
                         }
                     }
                     Divider()
@@ -236,6 +237,39 @@ struct TrailsView: View {
                     trailToView = trail
                 }
             }
+            #else
+            List(filtered) { trail in
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(trail.name).fontWeight(.medium)
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(HikeStore.color(for: trail.region))
+                                .frame(width: 8, height: 8)
+                            Text(trail.region)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                    if let d = trail.distanceMiles {
+                        Text(String(format: "%.1f mi", d))
+                            .font(.callout)
+                            .monospacedDigit()
+                    }
+                    if let e = trail.elevationGainFt {
+                        Text("\(Int(e).formatted()) ft")
+                            .font(.callout)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    trailToView = trail
+                }
+            }
+            #endif
         }
         .popover(item: $trailToView, arrowEdge: .leading) { trail in
             TrailHikesView(trail: trail, hikeStore: hikeStore)
@@ -505,7 +539,7 @@ struct TrailHikesView: View {
                     }
                     if let urlStr = trail.url, let url = URL(string: urlStr) {
                         Button {
-                            NSWorkspace.shared.open(url)
+                            openURL(url)
                         } label: {
                             HStack(spacing: 3) {
                                 Image(systemName: "safari")

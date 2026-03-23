@@ -41,41 +41,45 @@ struct HikeMapView: View {
         ))
     ]
 
-    var body: some View {
-        HSplitView {
-            // Map
-            ZStack(alignment: .topLeading) {
-                Map(position: $position, selection: $selectedTrail) {
-                    ForEach(store.trailSummaries()) { trail in
-                        Annotation(trail.name, coordinate: trail.coordinate, anchor: .center) {
-                            TrailPin(trail: trail, isSelected: selectedTrail == trail)
-                                .onTapGesture {
-                                    selectedTrail = trail
-                                }
-                        }
-                        .tag(trail)
-                    }
-                }
-                .mapStyle(colorScheme == .dark
-                    ? .standard(elevation: .realistic, emphasis: .muted, pointsOfInterest: .including([.nationalPark, .park]))
-                    : .standard(elevation: .realistic))
-
-                // View preset buttons
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(presets, id: \.0) { name, region in
-                        Button(name) {
-                            withAnimation(.easeInOut(duration: 0.5)) {
-                                position = .region(region)
+    private var mapContent: some View {
+        ZStack(alignment: .topLeading) {
+            Map(position: $position, selection: $selectedTrail) {
+                ForEach(store.trailSummaries()) { trail in
+                    Annotation(trail.name, coordinate: trail.coordinate, anchor: .center) {
+                        TrailPin(trail: trail, isSelected: selectedTrail == trail)
+                            .onTapGesture {
+                                selectedTrail = trail
                             }
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                        .font(.caption)
                     }
+                    .tag(trail)
                 }
-                .padding(8)
             }
-            .frame(minWidth: 500)
+            .mapStyle(colorScheme == .dark
+                ? .standard(elevation: .realistic, emphasis: .muted, pointsOfInterest: .including([.nationalPark, .park]))
+                : .standard(elevation: .realistic))
+
+            // View preset buttons
+            VStack(alignment: .leading, spacing: 4) {
+                ForEach(presets, id: \.0) { name, region in
+                    Button(name) {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            position = .region(region)
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .font(.caption)
+                }
+            }
+            .padding(8)
+        }
+    }
+
+    var body: some View {
+        #if os(macOS)
+        HSplitView {
+            mapContent
+                .frame(minWidth: 500)
 
             // Detail sidebar
             VStack {
@@ -94,10 +98,20 @@ struct HikeMapView: View {
                     }
                     .frame(maxHeight: .infinity)
                 }
-
             }
             .frame(width: 260)
         }
+        #else
+        mapContent
+            .sheet(item: $selectedTrail) { trail in
+                NavigationStack {
+                    TrailDetailPanel(trail: trail, store: store)
+                        .navigationTitle(trail.name)
+                        .navigationBarTitleDisplayMode(.inline)
+                }
+                .presentationDetents([.medium, .large])
+            }
+        #endif
     }
 }
 

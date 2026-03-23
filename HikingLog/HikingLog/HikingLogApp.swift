@@ -6,7 +6,9 @@ struct HikingApp: App {
     @State private var store = HikeStore()
     @State private var trailStore = TrailStore()
     @State private var showingImportAlert = false
+    #if os(macOS)
     @State private var importPreview: ImportPreview?
+    #endif
 
     var body: some Scene {
         WindowGroup {
@@ -24,6 +26,7 @@ struct HikingApp: App {
                         showingImportAlert = true
                     }
                 }
+                #if os(macOS)
                 .onReceive(NotificationCenter.default.publisher(for: .showImportPreview)) { notification in
                     if let preview = notification.object as? ImportPreview {
                         importPreview = preview
@@ -34,7 +37,9 @@ struct HikingApp: App {
                         store.importSelected(selected)
                     }
                 }
+                #endif
         }
+        #if os(macOS)
         .defaultSize(width: 1200, height: 800)
         .commands {
             CommandGroup(after: .importExport) {
@@ -62,8 +67,10 @@ struct HikingApp: App {
                 }
             }
         }
+        #endif
     }
 
+    #if os(macOS)
     private func importHealthExportZip() {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [UTType.zip]
@@ -131,10 +138,12 @@ struct HikingApp: App {
         alert.informativeText = error.localizedDescription
         alert.runModal()
     }
+    #endif
 }
 
-// MARK: - Import Preview
+// MARK: - Import Preview (macOS only)
 
+#if os(macOS)
 struct ImportPreview: Identifiable {
     let id = UUID()
     let hikes: [Hike]
@@ -152,134 +161,65 @@ struct ImportPreviewView: View {
     init(preview: ImportPreview, onImport: @escaping ([Hike]) -> Void) {
         self.preview = preview
         self.onImport = onImport
-        // Pre-select hikes > 5 miles
-        let preselected = preview.hikes
-            .filter { $0.distanceMiles > 5.0 }
-            .map(\.id)
+        let preselected = preview.hikes.filter { $0.distanceMiles > 5.0 }.map(\.id)
         self._selected = State(initialValue: Set(preselected))
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
             VStack(spacing: 6) {
-                Text("Import Preview")
-                    .font(.title2.bold())
-                Text("\(preview.hikes.count) new hikes found from \(preview.source)")
-                    .font(.callout)
+                Text("Import Preview").font(.title2.bold())
+                Text("\(preview.hikes.count) new hikes found from \(preview.source)").font(.callout)
                 if preview.skipped > 0 {
-                    Text("\(preview.skipped) duplicates already skipped")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                if !preview.errors.isEmpty {
-                    Text("\(preview.errors.count) sessions had errors")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
+                    Text("\(preview.skipped) duplicates already skipped").font(.caption).foregroundStyle(.secondary)
                 }
             }
             .padding()
-
             Divider()
-
-            // Quick actions
             HStack {
-                Button("Select All") {
-                    selected = Set(preview.hikes.map(\.id))
-                }
-                Button("Select None") {
-                    selected.removeAll()
-                }
-                Button("Select > 5 mi") {
-                    selected = Set(preview.hikes.filter { $0.distanceMiles > 5.0 }.map(\.id))
-                }
-                Button("Select > 3 mi") {
-                    selected = Set(preview.hikes.filter { $0.distanceMiles > 3.0 }.map(\.id))
-                }
+                Button("Select All") { selected = Set(preview.hikes.map(\.id)) }
+                Button("Select None") { selected.removeAll() }
+                Button("Select > 5 mi") { selected = Set(preview.hikes.filter { $0.distanceMiles > 5.0 }.map(\.id)) }
+                Button("Select > 3 mi") { selected = Set(preview.hikes.filter { $0.distanceMiles > 3.0 }.map(\.id)) }
                 Spacer()
-                Text("\(selected.count) of \(preview.hikes.count) selected")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text("\(selected.count) of \(preview.hikes.count) selected").font(.caption).foregroundStyle(.secondary)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-
+            .buttonStyle(.bordered).controlSize(.small)
+            .padding(.horizontal).padding(.vertical, 8)
             Divider()
-
-            // Hike list
             List {
                 ForEach(preview.hikes) { hike in
                     let isSelected = selected.contains(hike.id)
                     HStack(spacing: 10) {
                         Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(isSelected ? .green : .secondary)
-                            .font(.title3)
-
-                        Text(hike.formattedDate)
-                            .frame(width: 100, alignment: .leading)
-
-                        Text(hike.trailName)
-                            .fontWeight(.medium)
-                            .lineLimit(1)
-
+                            .foregroundStyle(isSelected ? .green : .secondary).font(.title3)
+                        Text(hike.formattedDate).frame(width: 100, alignment: .leading)
+                        Text(hike.trailName).fontWeight(.medium).lineLimit(1)
                         Spacer()
-
-                        Text(hike.region)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 110, alignment: .trailing)
-
-                        Text(String(format: "%.1f mi", hike.distanceMiles))
-                            .monospacedDigit()
-                            .fontWeight(hike.distanceMiles > 5.0 ? .medium : .regular)
-                            .foregroundStyle(hike.distanceMiles > 5.0 ? .primary : .secondary)
-                            .frame(width: 60, alignment: .trailing)
-
-                        Text("\(Int(hike.elevationGainFt).formatted()) ft")
-                            .monospacedDigit()
-                            .foregroundStyle(.secondary)
-                            .frame(width: 65, alignment: .trailing)
-
-                        Text(hike.formattedDuration)
-                            .monospacedDigit()
-                            .foregroundStyle(.secondary)
-                            .frame(width: 55, alignment: .trailing)
+                        Text(String(format: "%.1f mi", hike.distanceMiles)).monospacedDigit().frame(width: 60, alignment: .trailing)
+                        Text("\(Int(hike.elevationGainFt).formatted()) ft").monospacedDigit().foregroundStyle(.secondary).frame(width: 65, alignment: .trailing)
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        if selected.contains(hike.id) {
-                            selected.remove(hike.id)
-                        } else {
-                            selected.insert(hike.id)
-                        }
+                        if selected.contains(hike.id) { selected.remove(hike.id) } else { selected.insert(hike.id) }
                     }
                 }
             }
-
             Divider()
-
-            // Actions
             HStack {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .keyboardShortcut(.escape)
-
+                Button("Cancel") { dismiss() }.keyboardShortcut(.escape)
                 Spacer()
-
                 Button("Import \(selected.count) Hike\(selected.count == 1 ? "" : "s")") {
-                    let toImport = preview.hikes.filter { selected.contains($0.id) }
-                    onImport(toImport)
+                    onImport(preview.hikes.filter { selected.contains($0.id) })
                     dismiss()
-                }
-                .keyboardShortcut(.return)
-                .buttonStyle(.borderedProminent)
-                .disabled(selected.isEmpty)
-            }
-            .padding()
+                }.keyboardShortcut(.return).buttonStyle(.borderedProminent).disabled(selected.isEmpty)
+            }.padding()
         }
         .frame(width: 780, height: 550)
     }
 }
+
+extension Notification.Name {
+    static let showImportPreview = Notification.Name("showImportPreview")
+}
+#endif

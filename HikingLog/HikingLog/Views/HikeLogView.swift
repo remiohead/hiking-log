@@ -6,21 +6,27 @@ struct HikeLogView: View {
     @State private var selectedYear = "All"
     @State private var selectedRegion = "All"
     @State private var searchText = ""
+    #if os(macOS)
     @State private var sortOrder = [KeyPathComparator(\Hike.date, order: .reverse)]
     @State private var selectedHikeID: String?
     @State private var showingAddSheet = false
     @State private var hikeToEdit: Hike?
-    @State private var hikeToView: Hike?
     @State private var pendingBulkUpdate: BulkTrailUpdate?
+    #endif
+    @State private var hikeToView: Hike?
     @State private var photosHike: Hike?
 
     private var filtered: [Hike] {
-        store.hikes.filter { hike in
+        let base = store.hikes.filter { hike in
             (selectedYear == "All" || hike.year == selectedYear) &&
             (selectedRegion == "All" || hike.region == selectedRegion) &&
             (searchText.isEmpty || hike.trailName.localizedCaseInsensitiveContains(searchText))
         }
-        .sorted(using: sortOrder)
+        #if os(macOS)
+        return base.sorted(using: sortOrder)
+        #else
+        return base.sorted { $0.date > $1.date }
+        #endif
     }
 
     var body: some View {
@@ -53,11 +59,13 @@ struct HikeLogView: View {
                     .foregroundStyle(.secondary)
                     .font(.callout)
 
+                #if os(macOS)
                 Button {
                     showingAddSheet = true
                 } label: {
                     Label("Add Hike", systemImage: "plus")
                 }
+                #endif
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
@@ -65,6 +73,7 @@ struct HikeLogView: View {
             Divider()
 
             // Table
+            #if os(macOS)
             Table(filtered, selection: $selectedHikeID, sortOrder: $sortOrder) {
                 TableColumn("Date", value: \.date) { hike in
                     Text(hike.formattedDate)
@@ -179,6 +188,40 @@ struct HikeLogView: View {
                     hikeToView = hike
                 }
             }
+            #else
+            List(filtered) { hike in
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(hike.formattedDate)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(hike.trailName)
+                            .fontWeight(.medium)
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(HikeStore.color(for: hike.region))
+                                .frame(width: 6, height: 6)
+                            Text(hike.region)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(String(format: "%.1f mi", hike.distanceMiles))
+                            .monospacedDigit()
+                        Text("\(Int(hike.elevationGainFt).formatted()) ft")
+                            .font(.caption)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    hikeToView = hike
+                }
+            }
+            #endif
         }
         .popover(item: $hikeToView, arrowEdge: .leading) { hike in
             HikeDetailView(hike: hike, store: store, trailStore: trailStore)
@@ -186,6 +229,7 @@ struct HikeLogView: View {
         .popover(item: $photosHike, arrowEdge: .trailing) { hike in
             HikePhotosView(date: hike.date, trailName: hike.trailName, lat: hike.startLat, lon: hike.startLon)
         }
+        #if os(macOS)
         .sheet(item: $hikeToEdit) { originalHike in
             HikeEditorView(hike: originalHike, mode: .edit, trailStore: trailStore) { edited in
                 let oldTrailName = originalHike.trailName
@@ -230,6 +274,7 @@ struct HikeLogView: View {
                 store.add(newHike)
             }
         }
+        #endif
     }
 }
 
@@ -238,6 +283,8 @@ struct HikeLogView: View {
 enum HikeEditorMode {
     case add, edit
 }
+
+#if os(macOS)
 
 struct HikeEditorView: View {
     @Environment(\.dismiss) private var dismiss
@@ -626,3 +673,4 @@ extension Hike {
         )
     }
 }
+#endif

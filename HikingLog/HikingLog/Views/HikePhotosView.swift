@@ -79,7 +79,11 @@ struct HikePhotosView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Open Settings") {
-                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Photos")!)
+                        #if os(macOS)
+                        openURL(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Photos")!)
+                        #else
+                        openURL(URL(string: UIApplication.openSettingsURLString)!)
+                        #endif
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.small)
@@ -131,15 +135,23 @@ struct HikePhotosView: View {
 
 // MARK: - Photo Thumbnail
 
+private func platformImage(_ img: PlatformImage) -> Image {
+    #if os(macOS)
+    Image(nsImage: img)
+    #else
+    Image(uiImage: img)
+    #endif
+}
+
 struct PhotoThumbnail: View {
     let asset: PHAsset
-    @State private var image: NSImage?
+    @State private var image: PlatformImage?
     @State private var isHovered = false
 
     var body: some View {
         ZStack {
             if let image {
-                Image(nsImage: image)
+                platformImage(image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(minWidth: 80, minHeight: 80)
@@ -194,14 +206,19 @@ struct PhotoThumbnail: View {
     }
 
     private func openPhoto() {
+        #if os(macOS)
         // Get the full-size image URL and open it with Quick Look / Preview
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
         asset.requestContentEditingInput(with: options) { input, _ in
             if let url = input?.fullSizeImageURL {
-                NSWorkspace.shared.open(url)
+                openURL(url)
             }
         }
+        #else
+        // On iOS, open the Photos app
+        openURL(URL(string: "photos://")!)
+        #endif
     }
 }
 

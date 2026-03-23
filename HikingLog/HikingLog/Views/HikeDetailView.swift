@@ -120,7 +120,7 @@ struct HikeDetailView: View {
                             }
                             Spacer()
                             Button("Open") {
-                                NSWorkspace.shared.open(url)
+                                openURL(url)
                             }
                             .buttonStyle(.bordered)
                             .controlSize(.small)
@@ -272,7 +272,7 @@ struct HikeDetailView: View {
                         Button("Open in Maps") {
                             let urlStr = "https://maps.apple.com/?ll=\(hike.startLat),\(hike.startLon)&q=\(hike.trailName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
                             if let url = URL(string: urlStr) {
-                                NSWorkspace.shared.open(url)
+                                openURL(url)
                             }
                         }
                         .buttonStyle(.bordered)
