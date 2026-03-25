@@ -78,11 +78,13 @@ server.tool(
   "Get overall hiking statistics, optionally filtered by year or region",
   {
     year: z.string().optional().describe("Filter by year (e.g. '2024')"),
+    month: z.string().optional().describe("Filter by month (e.g. '10' for October). Combine with year for a specific month."),
     region: z.string().optional().describe("Filter by region"),
   },
-  async ({ year, region }) => {
+  async ({ year, month, region }) => {
     let hikes = loadHikes();
     if (year) hikes = hikes.filter(h => h.date.startsWith(year));
+    if (month) { const m = month.padStart(2, "0"); hikes = hikes.filter(h => h.date.slice(5, 7) === m); }
     if (region) hikes = hikes.filter(h => h.region === region);
     const n = hikes.length || 1;
     const totalMiles = hikes.reduce((a, h) => a + h.distance_miles, 0);
@@ -437,6 +439,216 @@ server.tool(
             .sort((a, b) => b.hikes - a.hikes),
           null, 2
         ),
+      }],
+    };
+  }
+);
+
+server.tool(
+  "get_all_hikes",
+  "Get every individual hike record with optional filters — ideal for time-based analysis",
+  {
+    year: z.string().optional().describe("Filter by year (e.g. '2024')"),
+    month: z.string().optional().describe("Filter by month (e.g. '10' for October)"),
+    region: z.string().optional().describe("Filter by region"),
+    date_from: z.string().optional().describe("Start date inclusive (YYYY-MM-DD)"),
+    date_to: z.string().optional().describe("End date inclusive (YYYY-MM-DD)"),
+    trail_name: z.string().optional().describe("Filter by trail name (partial match)"),
+  },
+  async ({ year, month, region, date_from, date_to, trail_name }) => {
+    let hikes = loadHikes();
+    if (year) hikes = hikes.filter(h => h.date.startsWith(year));
+    if (month) { const m = month.padStart(2, "0"); hikes = hikes.filter(h => h.date.slice(5, 7) === m); }
+    if (region) hikes = hikes.filter(h => h.region === region);
+    if (date_from) hikes = hikes.filter(h => h.date >= date_from);
+    if (date_to) hikes = hikes.filter(h => h.date <= date_to);
+    if (trail_name) { const q = trail_name.toLowerCase(); hikes = hikes.filter(h => h.trail_name.toLowerCase().includes(q)); }
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          count: hikes.length,
+          hikes: hikes.map(h => ({
+            date: h.date,
+            trail_name: h.trail_name,
+            region: h.region,
+            distance_miles: h.distance_miles,
+            elevation_gain_ft: h.elevation_gain_ft,
+            duration_minutes: h.duration_minutes,
+          })),
+        }, null, 2),
+      }],
+    };
+  }
+);
+
+server.tool(
+  "get_monthly_stats",
+  "Get aggregated hiking stats broken down by month — great for leaderboards and comparisons",
+  {
+    year: z.string().optional().describe("Filter to a specific year (e.g. '2022'). Omit for all-time monthly breakdown."),
+  },
+  async ({ year }) => {
+    let hikes = loadHikes();
+    if (year) hikes = hikes.filter(h => h.date.startsWith(year));
+
+    const months = {};
+    hikes.forEach(h => {
+      const key = h.date.slice(0, 7); // YYYY-MM
+      if (!months[key]) months[key] = { hikes: 0, miles: 0, elevation_ft: 0, duration_minutes: 0, trails: new Set(), regions: new Set() };
+      const m = months[key];
+      m.hikes++;
+      m.miles += h.distance_miles;
+      m.elevation_ft += h.elevation_gain_ft;
+      m.duration_minutes += h.duration_minutes;
+      m.trails.add(h.trail_name);
+      m.regions.add(h.region);
+    });
+
+    const result = Object.entries(months)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, m]) => ({
+        month,
+        hikes: m.hikes,
+        miles: Math.round(m.miles * 10) / 10,
+        elevation_ft: Math.round(m.elevation_ft),
+        duration_hours: Math.round(m.duration_minutes / 60 * 10) / 10,
+        unique_trails: m.trails.size,
+        unique_regions: m.regions.size,
+      }));
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({ count: result.length, months: result }, null, 2),
+      }],
+    };
+  }
+);
+
+server.tool(
+  "get_streaks",
+  "Track hiking streaks — consecutive Saturdays hiked, longest gaps, current streak",
+  {},
+  async () => {
+    const hikes = loadHikes();
+    if (!hikes.length) return { content: [{ type: "text", text: JSON.stringify({ error: "No hikes found" }) }] };
+
+    // Get unique hike dates sorted ascending
+    const dates = [...new Set(hikes.map(h => h.date))].sort();
+
+    // Saturday streaks
+    const allSaturdays = [];
+    const first = new Date(dates[0] + "T12:00:00");
+    const last = new Date(dates[dates.length - 1] + "T12:00:00");
+    // Find first Saturday on or before first hike
+    const start = new Date(first);
+    start.setDate(start.getDate() - start.getDay() + 6); // next Saturday
+    if (start > first) start.setDate(start.getDate() - 7);
+
+    const hikeDateSet = new Set(dates);
+    for (let d = new Date(start); d <= last; d.setDate(d.getDate() + 7)) {
+      const ds = d.toISOString().slice(0, 10);
+      allSaturdays.push({ date: ds, hiked: hikeDateSet.has(ds) });
+    }
+
+    // Also check the Saturday after the last hike up to today
+    const today = new Date();
+    const lastSat = new Date(allSaturdays[allSaturdays.length - 1]?.date + "T12:00:00");
+    for (let d = new Date(lastSat); d.setDate(d.getDate() + 7), d <= today;) {
+      const ds = d.toISOString().slice(0, 10);
+      allSaturdays.push({ date: ds, hiked: hikeDateSet.has(ds) });
+    }
+
+    // Compute Saturday streaks
+    let currentStreak = 0, longestStreak = 0, longestStreakStart = "", longestStreakEnd = "";
+    let streakStart = "";
+    let tempStreak = 0;
+    for (const sat of allSaturdays) {
+      if (sat.hiked) {
+        tempStreak++;
+        if (tempStreak === 1) streakStart = sat.date;
+        if (tempStreak > longestStreak) {
+          longestStreak = tempStreak;
+          longestStreakStart = streakStart;
+          longestStreakEnd = sat.date;
+        }
+      } else {
+        tempStreak = 0;
+      }
+    }
+    // Current streak: count backwards from most recent Saturday
+    currentStreak = 0;
+    let currentStreakStart = "";
+    for (let i = allSaturdays.length - 1; i >= 0; i--) {
+      if (allSaturdays[i].hiked) {
+        currentStreak++;
+        currentStreakStart = allSaturdays[i].date;
+      } else {
+        break;
+      }
+    }
+
+    // Longest gap between any consecutive hikes
+    let longestGapDays = 0, longestGapFrom = "", longestGapTo = "";
+    for (let i = 1; i < dates.length; i++) {
+      const gap = (new Date(dates[i] + "T12:00:00") - new Date(dates[i - 1] + "T12:00:00")) / 86400000;
+      if (gap > longestGapDays) {
+        longestGapDays = gap;
+        longestGapFrom = dates[i - 1];
+        longestGapTo = dates[i];
+      }
+    }
+
+    // Weekly streaks (any day in the week counts)
+    const hikeWeeks = new Set(dates.map(d => {
+      const dt = new Date(d + "T12:00:00");
+      const jan1 = new Date(dt.getFullYear(), 0, 1);
+      const week = Math.ceil(((dt - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+      return `${dt.getFullYear()}-W${String(week).padStart(2, "0")}`;
+    }));
+    const sortedWeeks = [...hikeWeeks].sort();
+    let weekStreak = 0, longestWeekStreak = 0;
+    // Simple consecutive week check by ISO week parsing
+    for (let i = 0; i < sortedWeeks.length; i++) {
+      if (i === 0) { weekStreak = 1; }
+      else {
+        const [py, pw] = sortedWeeks[i - 1].split("-W").map(Number);
+        const [cy, cw] = sortedWeeks[i].split("-W").map(Number);
+        const isConsecutive = (cy === py && cw === pw + 1) || (cy === py + 1 && pw >= 51 && cw === 1);
+        weekStreak = isConsecutive ? weekStreak + 1 : 1;
+      }
+      if (weekStreak > longestWeekStreak) longestWeekStreak = weekStreak;
+    }
+
+    // Saturday hike rate
+    const totalSaturdays = allSaturdays.length;
+    const saturdaysHiked = allSaturdays.filter(s => s.hiked).length;
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          saturday_streaks: {
+            current_streak: currentStreak,
+            current_streak_start: currentStreakStart || null,
+            longest_streak: longestStreak,
+            longest_streak_period: { from: longestStreakStart, to: longestStreakEnd },
+            saturdays_hiked: saturdaysHiked,
+            total_saturdays: totalSaturdays,
+            saturday_hike_rate: Math.round(saturdaysHiked / totalSaturdays * 1000) / 10 + "%",
+          },
+          weekly_streaks: {
+            longest_consecutive_weeks: longestWeekStreak,
+          },
+          gaps: {
+            longest_gap_days: longestGapDays,
+            longest_gap_period: { from: longestGapFrom, to: longestGapTo },
+          },
+          total_unique_hike_days: dates.length,
+          date_range: { first: dates[0], last: dates[dates.length - 1] },
+        }, null, 2),
       }],
     };
   }
