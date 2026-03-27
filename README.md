@@ -114,7 +114,7 @@ Then build and install the app (`cd HikingLog && ./install.sh`).
 
 ## MCP Server
 
-An MCP (Model Context Protocol) server exposes the hiking data to Claude for analysis and recommendations.
+A Swift MCP (Model Context Protocol) server exposes the hiking data to Claude for analysis and recommendations.
 
 ### Tools
 
@@ -127,18 +127,31 @@ An MCP (Model Context Protocol) server exposes the hiking data to Claude for ana
 | `get_hiking_patterns` | Frequency, seasonal trends, day-of-week, progression analysis |
 | `get_recommendations` | Personalized recommendations based on preferences, loved trails, drive distance |
 | `get_all_regions` | All regions with trail and hike counts |
+| `get_all_hikes` | Every individual hike record with optional filters |
+| `get_monthly_stats` | Aggregated hiking stats broken down by month |
+| `get_streaks` | Consecutive Saturdays hiked, longest gaps, current streak |
 
-### Claude Desktop (Desktop Extension)
-
-Build the `.mcpb` bundle:
+### Build & Install
 
 ```bash
-cd mcp-server
-npm install
-npx @anthropic-ai/mcpb pack . ../hiking-data.mcpb
+cd mcp-server-swift
+swift build -c release
+./install.sh  # installs to /usr/local/bin/hiking-mcp-server
 ```
 
-Then double-click `hiking-data.mcpb` to install in Claude Desktop.
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "hiking": {
+      "command": "hiking-mcp-server"
+    }
+  }
+}
+```
 
 ### Claude Code
 
@@ -187,8 +200,10 @@ hiking-log/
         hike_history.json       # Bundled hike data (seed)
         trail_database.json     # Bundled trail database (seed)
         AppIcon.icns            # App icon
-  mcp-server/
-    server.mjs                  # MCP server (Node.js)
-    manifest.json               # Desktop Extension manifest
-    package.json
+  mcp-server-swift/
+    Package.swift               # Swift Package Manager config
+    install.sh                  # Build + install to /usr/local/bin
+    Sources/
+      main.swift                # MCP server entry point + tool handlers
+      Models.swift              # Hike/Trail data models, data loader
 ```
