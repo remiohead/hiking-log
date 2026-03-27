@@ -1,20 +1,23 @@
 {
-  "manifest_version": "0.2",
+  "manifest_version": "0.3",
   "name": "hiking-data",
   "display_name": "Hiking Data",
   "version": "1.0.0",
-  "description": "Access hiking log data — trail history, stats, recommendations, and location data from 8+ years of hiking in Washington state.",
+  "description": "Access hiking log data — trail history, stats, recommendations, streaks, and location data from 8+ years of hiking in Washington state.",
   "author": {
     "name": "Hiking Log"
   },
   "server": {
-    "type": "node",
-    "entry_point": "server.mjs",
+    "type": "binary",
+    "entry_point": "bin/hiking-mcp-server",
     "mcp_config": {
-      "command": "node",
-      "args": ["${__dirname}/server.mjs"],
+      "command": "${__dirname}/bin/hiking-mcp-server",
+      "args": [],
       "env": {}
     }
+  },
+  "compatibility": {
+    "platforms": ["darwin"]
   },
   "tools": [
     {
@@ -44,6 +47,22 @@
     {
       "name": "get_all_regions",
       "description": "List all regions with trail and hike counts"
+    },
+    {
+      "name": "get_all_hikes",
+      "description": "Get every individual hike record with optional filters"
+    },
+    {
+      "name": "get_monthly_stats",
+      "description": "Get aggregated hiking stats broken down by month"
+    },
+    {
+      "name": "get_streaks",
+      "description": "Track hiking streaks — consecutive Saturdays hiked, longest gaps, current streak"
+    },
+    {
+      "name": "get_weekly_recommendations",
+      "description": "Get this week's generated trail recommendations, if available"
     }
   ]
 }

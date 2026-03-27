@@ -9,7 +9,7 @@ Live data is symlinked into the `data/` directory. See `data/DATA_FORMAT.md` for
 - `data/hike_history.json` — All hikes (date, distance, elevation, duration, GPS coordinates, trail links)
 - `data/trails.json` — Trail database (names, regions, URLs, coordinates, loved-by flags, difficulty, dog-friendly)
 
-An MCP server is also available (see `mcp-server/`) with tools for stats, search, recommendations, and pattern analysis.
+An MCP server is also available (see `mcp-server-swift/`) with tools for stats, search, recommendations, and pattern analysis.
 
 ## Key Context for Recommendations
 

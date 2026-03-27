@@ -21,8 +21,5 @@ DerivedData/
 data/
 
 # MCP server
-mcp-server/node_modules/
 *.mcpb
-
-# MCP config (contains absolute paths)
-.mcp.json
+mcp-server-swift/bundle/bin/
