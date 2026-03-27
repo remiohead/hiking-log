@@ -18,7 +18,7 @@ DerivedData/
 *.zip
 
 # Live data copied via ./sync-data.sh (not symlinked)
-data/*.json
+data/
 
 # MCP server
 mcp-server/node_modules/
