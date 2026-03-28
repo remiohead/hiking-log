@@ -29,16 +29,11 @@ actor ClaudeService {
     static let shared = ClaudeService()
 
     private static var apiKeyURL: URL {
-        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Hiking", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        return dir.appendingPathComponent(".api_key")
+        hikingLocalDir.appendingPathComponent(".api_key")
     }
 
     private static var recommendationsURL: URL {
-        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Hiking", isDirectory: true)
-        return dir.appendingPathComponent("recommendations.json")
+        hikingDataDir.appendingPathComponent("recommendations.json")
     }
 
     static func loadAPIKey() -> String {
@@ -50,9 +45,7 @@ actor ClaudeService {
     }
 
     private static var emailRecipientsURL: URL {
-        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Hiking", isDirectory: true)
-        return dir.appendingPathComponent(".email_recipients")
+        hikingLocalDir.appendingPathComponent(".email_recipients")
     }
 
     static func loadEmailRecipients() -> String {
@@ -263,8 +256,7 @@ actor ClaudeService {
 
     private func parseRecommendations(_ text: String) -> [HikeRecommendation] {
         // Log raw response for debugging
-        let debugURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Hiking/debug_response.txt")
+        let debugURL = hikingLocalDir.appendingPathComponent("debug_response.txt")
         try? text.write(to: debugURL, atomically: true, encoding: .utf8)
         print("Claude response (\(text.count) chars) written to debug_response.txt")
 

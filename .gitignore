@@ -17,8 +17,6 @@ DerivedData/
 # Health export zip files (large, user data)
 *.zip
 
-# Live data copied via ./sync-data.sh (not symlinked)
-data/
 
 # MCP server
 *.mcpb

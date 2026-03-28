@@ -55,11 +55,13 @@ No Xcode required — builds with just the Swift command-line tools.
 
 ## Data Storage
 
-All data persists to `~/Library/Application Support/Hiking/`:
-- `hike_history.json` — all hikes with date, distance, elevation, duration, coordinates, trail links
-- `trails.json` — trail database with names, regions, URLs, coordinates, loved-by flags, difficulty, dog-friendly
+Both the app and MCP server check for data in this order:
+1. **iCloud Drive** — `~/Library/Mobile Documents/com~apple~CloudDocs/Hiking/`
+2. **Application Support** — `~/Library/Application Support/Hiking/`
 
-On first launch, the app seeds from bundled data. After that, all changes are saved to Application Support, which survives app updates.
+Data files (`hike_history.json`, `trails.json`, `recommendations.json`) use iCloud when available, enabling automatic multi-Mac sync. Machine-specific config (`.api_key`, `.email_recipients`, `.config`) always stays in Application Support.
+
+On first launch, the app seeds from bundled data. After that, all changes are saved to whichever directory is active.
 
 ## Build & Install
 
@@ -80,35 +82,20 @@ The install script builds a release binary, creates a proper `.app` bundle in `/
 
 ## Multi-Mac Sync (iCloud)
 
-Data syncs across Macs via iCloud Drive. The actual files live in iCloud and each Mac symlinks to them.
+Data syncs automatically across Macs via iCloud Drive. The app reads/writes directly to `~/Library/Mobile Documents/com~apple~CloudDocs/Hiking/` when it exists.
 
-### First Mac (already done)
+### First Mac (one-time setup)
 
 ```bash
 # Move data to iCloud Drive
 mkdir -p ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking
 mv ~/Library/Application\ Support/Hiking/hike_history.json ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/
 mv ~/Library/Application\ Support/Hiking/trails.json ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/
-
-# Symlink back
-ln -sf ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/hike_history.json ~/Library/Application\ Support/Hiking/hike_history.json
-ln -sf ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/trails.json ~/Library/Application\ Support/Hiking/trails.json
-ln -sf ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/recommendations.json ~/Library/Application\ Support/Hiking/recommendations.json
 ```
 
 ### Additional Macs
 
-```bash
-# Create local app directory
-mkdir -p ~/Library/Application\ Support/Hiking
-
-# Symlink to iCloud data (already synced)
-ln -sf ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/hike_history.json ~/Library/Application\ Support/Hiking/hike_history.json
-ln -sf ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/trails.json ~/Library/Application\ Support/Hiking/trails.json
-ln -sf ~/Library/Mobile\ Documents/com~apple~CloudDocs/Hiking/recommendations.json ~/Library/Application\ Support/Hiking/recommendations.json
-```
-
-Then build and install the app (`cd HikingLog && ./install.sh`).
+Just build and install the app (`cd HikingLog && ./install.sh`). iCloud will sync the data automatically — no symlinks needed.
 
 **Note:** The API key (`.api_key`) is kept local per machine — enter it separately on each Mac via the Recommendations settings.
 
@@ -169,10 +156,6 @@ hiking-log/
   CLAUDE.md                     # Context for Claude (MCP tools, recommendations guidance)
   README.md                     # This file
   .mcp.json                     # MCP server config for Claude Code
-  data/
-    DATA_FORMAT.md              # Data schema documentation
-    hike_history.json           # Symlink to live data (gitignored)
-    trails.json                 # Symlink to live data (gitignored)
   HikingLog/
     Package.swift               # Swift Package Manager config
     install.sh                  # Build + install to /Applications

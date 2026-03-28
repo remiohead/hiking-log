@@ -95,7 +95,12 @@ struct RecommendationSet: Codable, Sendable {
 
 enum DataLoader {
     static let dataDir: URL = {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let iCloudDir = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs/Hiking", isDirectory: true)
+        if FileManager.default.fileExists(atPath: iCloudDir.path) {
+            return iCloudDir
+        }
+        return FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             .appendingPathComponent("Hiking", isDirectory: true)
     }()
 

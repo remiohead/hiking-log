@@ -4,10 +4,10 @@ A native macOS SwiftUI app tracking 8+ years of hiking data for two hikers with 
 
 ## Data Access
 
-Live data is symlinked into the `data/` directory. See `data/DATA_FORMAT.md` for the complete schema and query guidance.
+Both the app and MCP server check iCloud Drive first (`~/Library/Mobile Documents/com~apple~CloudDocs/Hiking/`), falling back to `~/Library/Application Support/Hiking/`. Machine-specific config (API key, email) always stays in Application Support.
 
-- `data/hike_history.json` — All hikes (date, distance, elevation, duration, GPS coordinates, trail links)
-- `data/trails.json` — Trail database (names, regions, URLs, coordinates, loved-by flags, difficulty, dog-friendly)
+- `hike_history.json` — All hikes (date, distance, elevation, duration, GPS coordinates, trail links)
+- `trails.json` — Trail database (names, regions, URLs, coordinates, loved-by flags, difficulty, dog-friendly)
 
 An MCP server is also available (see `mcp-server-swift/`) with tools for stats, search, recommendations, and pattern analysis.
 
