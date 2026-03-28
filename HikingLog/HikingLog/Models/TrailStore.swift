@@ -7,10 +7,7 @@ final class TrailStore {
     var trails: [Trail] = []
 
     static var dataFileURL: URL {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let appDir = appSupport.appendingPathComponent("Hiking", isDirectory: true)
-        try? FileManager.default.createDirectory(at: appDir, withIntermediateDirectories: true)
-        return appDir.appendingPathComponent("trails.json")
+        hikingDataDir.appendingPathComponent("trails.json")
     }
 
     init() {

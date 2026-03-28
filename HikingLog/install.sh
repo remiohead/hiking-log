@@ -67,6 +67,6 @@ PLIST
 
 echo ""
 echo "Installed to ${APP_BUNDLE}"
-echo "Data is stored in ~/Library/Application Support/Hiking/"
+echo "Data is stored in iCloud Drive (~/Library/Mobile Documents/com~apple~CloudDocs/Hiking/) or ~/Library/Application Support/Hiking/"
 echo ""
 echo "To launch: open /Applications/Hiking.app"

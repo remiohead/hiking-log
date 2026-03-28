@@ -8,10 +8,7 @@ final class HikeStore {
     var importStatus: String?
 
     static var dataFileURL: URL {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let appDir = appSupport.appendingPathComponent("Hiking", isDirectory: true)
-        try? FileManager.default.createDirectory(at: appDir, withIntermediateDirectories: true)
-        return appDir.appendingPathComponent("hike_history.json")
+        hikingDataDir.appendingPathComponent("hike_history.json")
     }
 
     static let regionColors: [String: Color] = [

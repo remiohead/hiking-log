@@ -16,9 +16,7 @@ struct PersonaConfig {
     }
 
     private static var configURL: URL {
-        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Hiking", isDirectory: true)
-        return dir.appendingPathComponent(".config")
+        hikingLocalDir.appendingPathComponent(".config")
     }
 
     private static func load() -> Config {
@@ -42,8 +40,7 @@ struct PersonaConfig {
 
     // Migrate old .persona_names file to new .config format
     static func migrateIfNeeded() {
-        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            .appendingPathComponent("Hiking", isDirectory: true)
+        let dir = hikingLocalDir
         let oldURL = dir.appendingPathComponent(".persona_names")
         if FileManager.default.fileExists(atPath: oldURL.path) && !FileManager.default.fileExists(atPath: configURL.path) {
             if let text = try? String(contentsOf: oldURL, encoding: .utf8) {
