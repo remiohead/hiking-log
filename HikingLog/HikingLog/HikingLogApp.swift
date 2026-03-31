@@ -42,6 +42,38 @@ struct HikingApp: App {
         #if os(macOS)
         .defaultSize(width: 1200, height: 800)
         .commands {
+            CommandGroup(after: .toolbar) {
+                Divider()
+                Menu("Retro Mode") {
+                    Button("Macintosh 1984") {
+                        NotificationCenter.default.post(name: .activateClassicMac, object: nil)
+                    }
+                    Button("Commodore 64") {
+                        NotificationCenter.default.post(name: .activateCommodore64, object: nil)
+                    }
+                    Button("Amiga 500") {
+                        NotificationCenter.default.post(name: .activateAmiga500, object: nil)
+                    }
+                    Button("NES") {
+                        NotificationCenter.default.post(name: .activateNES, object: nil)
+                    }
+                    Button("Game Boy") {
+                        NotificationCenter.default.post(name: .activateGameBoy, object: nil)
+                    }
+                    Button("Mega Drive") {
+                        NotificationCenter.default.post(name: .activateMegaDrive, object: nil)
+                    }
+                    Button("Atari 2600") {
+                        NotificationCenter.default.post(name: .activateAtari2600, object: nil)
+                    }
+                    Button("PlayStation") {
+                        NotificationCenter.default.post(name: .activatePlayStation, object: nil)
+                    }
+                    Button("Windows 3.1") {
+                        NotificationCenter.default.post(name: .activateWindows31, object: nil)
+                    }
+                }
+            }
             CommandGroup(after: .importExport) {
                 Button("Import Health Auto Export (.zip)...") {
                     importHealthExportZip()
